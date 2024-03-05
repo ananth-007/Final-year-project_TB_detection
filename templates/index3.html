@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image Prediction App</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        width: 80%;
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+        border-radius: 10px;
+      }
+
+      h2 {
+        text-align: center;
+        color: #333;
+      }
+
+      .image-container {
+        margin: 20px 0;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 300px;
+        overflow: hidden;
+        border: 7px solid black;
+        border-radius: 10px;
+      }
+
+      #uploaded-image,
+      #predicted-image {
+        max-width: 100%;
+        max-height: 100%;
+        display: none;
+        border: 7px solid black;
+      }
+
+      .form-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 40px;
+        margin-bottom: 20px;
+      }
+
+      #upload-form {
+        text-align: center;
+      }
+
+      #result {
+        text-align: center;
+        font-size: 1.5em;
+        margin-top: 20px;
+        color: #333;
+      }
+
+      #refresh-button {
+        display: none;
+        margin: 20px auto;
+        padding: 10px 20px;
+        background-color: #4caf50;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      #refresh-button:hover {
+        background-color: #45a049;
+      }
+
+      .loading-spinner {
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        border-top: 4px solid #3498db;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h2>Upload a chest X-Ray image for TB test</h2>
+
+      <div class="form-container">
+        <form
+          action="/predict"
+          method="post"
+          enctype="multipart/form-data"
+          id="upload-form"
+        >
+          <input type="file" name="file" accept=".png, .jpg, .jpeg" />
+          <input type="button" value="Predict" onclick="predictImage()" />
+        </form>
+      </div>
+
+      <div class="image-container">
+        <img id="uploaded-image" src="#" alt="Uploaded Image" />
+      </div>
+
+      <div id="result">
+        <!-- Prediction result and loading spinner will be displayed here -->
+      </div>
+
+      <button id="refresh-button" style="display: none">Start Over</button>
+    </div>
+
+    <script>
+      function predictImage() {
+        const imageElement = document.getElementById("uploaded-image");
+        const file = document.querySelector("input[type=file]").files[0];
+        const reader = new FileReader();
+
+        reader.onloadend = function () {
+          imageElement.src = reader.result;
+          imageElement.style.display = "block";
+          imageElement.style.border = "5px solid black";
+
+          const resultDiv = document.getElementById("result");
+          resultDiv.innerHTML = `<div class="loading-spinner"></div><p>Predicting...</p>`;
+
+          const formData = new FormData();
+          formData.append("file", file);
+
+          document
+            .getElementById("refresh-button")
+            .addEventListener("click", function () {
+              location.reload();
+            });
+
+          fetch("http://localhost:5000/predict", {
+            method: "POST",
+            body: formData,
+          })
+            .then((response) => response.json())
+
+            .then((data) => {
+              resultDiv.innerHTML = ""; // Clear loading spinner and text
+              if (data.error) {
+                resultDiv.innerHTML = `<p>Error: ${data.error}</p>`;
+              } else {
+                resultDiv.innerHTML = `<p>Prediction: ${data.result}</p>`;
+                if (data.result === "Not Tuberculosis") {
+                  imageElement.style.border = "7px solid green";
+                  console.log(data.result);
+                } else if (data.result === "Tuberculosis") {
+                  imageElement.style.border = "7px solid red";
+                  console.log(data.result);
+                }
+                document.getElementById("refresh-button").style.display =
+                  "block";
+              }
+            })
+            .catch((error) => {
+              console.error("Error predicting image:", error);
+            });
+        };
+
+        if (file) {
+          reader.readAsDataURL(file);
+        }
+      }
+    </script>
+  </body>
+</html>
