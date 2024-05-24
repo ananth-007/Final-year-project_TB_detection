@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prevention</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+      :root {
+        --color-1: #2a7875;
+        --text-color: #f0f0f0;
+        --accent-color: #006aff;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        font-size: 12pt;
+        font-family: Poppins, Segoe UI, Tahoma, sans-serif;
+      }
+
+      /* Header Styles */
+      nav {
+        height: 70px;
+        background-color: var(--color-1);
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+      }
+      nav img {
+        width: 50px;
+        position: absolute;
+        border-radius: 10px;
+        top: 10px;
+        left: 5%;
+      }
+      nav ul {
+        /* float: right; */
+        margin-right: 20px;
+        text-decoration: none;
+      }
+      nav ul li {
+        display: inline-flex;
+        line-height: 80px;
+        margin: 0 15px;
+        text-decoration: none;
+      }
+      nav ul li a {
+        position: relative;
+        color: rgb(240, 255, 240);
+        font-size: 18px;
+        padding: 5px 0;
+        text-decoration: none;
+      }
+      nav ul li a::before {
+        position: absolute;
+        content: "";
+        left: 0;
+        bottom: 25px;
+        height: 3px;
+        width: 100%;
+        background: rgb(202, 227, 239);
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.4s linear;
+      }
+      nav ul li a:hover:before {
+        transform: scaleX(1);
+        transform-origin: left;
+      }
+
+      nav svg {
+        fill: var(--text-color);
+      }
+      #sidebar-active {
+        display: none;
+      }
+      .open-sidebar-button,
+      .close-sidebar-button {
+        display: none;
+      }
+
+      /* media queries */
+      @media (max-width: 1200px) {
+        nav img {
+          left: 7%;
+        }
+      }
+      @media (max-width: 1110px) {
+        nav img {
+          left: 6%;
+          top: 9px;
+          width: 55px;
+        }
+        nav ul li a {
+          font-size: 17px;
+        }
+      }
+      @media (max-width: 1030px) {
+        nav ul li a::before {
+          position: absolute;
+          content: "";
+          left: 0;
+          bottom: -5px;
+          height: 3px;
+          width: 100%;
+          background: rgb(202, 227, 239);
+          transform: scaleX(0);
+          transform-origin: right;
+          transition: transform 0.4s linear;
+        }
+        .links-container {
+          flex-direction: column;
+          align-items: end;
+
+          position: fixed;
+          top: 0px;
+          height: 100%;
+          right: -100%;
+          width: 270px;
+          display: block;
+          text-align: end;
+          background-color: var(--color-1);
+          box-shadow: -5px 0 5px rgba(0, 0, 0, 0.25);
+          transition: all 0.5s;
+        }
+        nav a {
+          box-sizing: border-box;
+          position: relative;
+          padding: 5px 0px;
+          height: auto;
+          width: 100%;
+          justify-content: flex-end;
+        }
+        nav ul {
+          padding: 0;
+          flex-direction: column;
+          line-height: 40px;
+        }
+        nav ul li {
+          text-align: center;
+          display: block;
+          font-size: 35px;
+          padding: 1rem;
+          line-height: 40px;
+          text-transform: uppercase;
+        }
+
+        .open-sidebar-button {
+          padding: 20px;
+          display: block;
+        }
+
+        .close-sidebar-button {
+          padding: 20px;
+          display: block;
+        }
+        #sidebar-active:checked ~ .links-container {
+          right: 0;
+        }
+        #sidebar-active:checked ~ #overlay {
+          height: 100%;
+          width: 100%;
+          position: fixed;
+          top: 0;
+          left: 0;
+        }
+      }
+
+      section {
+        background-color: #fff;
+        padding: 2rem;
+        margin: 1rem;
+        border-radius: 15px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      section ul li {
+        text-decoration: none;
+        list-style: none;
+        line-height: normal;
+      }
+      .key {
+        list-style: disc;
+      }
+      .key1 {
+        list-style: disc;
+        margin-left: 2em;
+      }
+      b {
+        color: #343333;
+      }
+
+      /* footer style */
+      footer {
+        background-color: #333;
+        color: white;
+        text-align: center;
+        padding: 20px;
+      }
+      .f {
+        color: #f9f5f5;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <img class="logo" src="{{ url_for('static', filename='logo.jfif') }}" alt="Logo" />
+      <input type="checkbox" id="sidebar-active" />
+      <label for="sidebar-active" class="open-sidebar-button">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          height="32"
+          viewBox="0 -960 960 960"
+          width="32"
+        >
+          <path
+            d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"
+          />
+        </svg>
+      </label>
+      <label id="overlay" for="sidebar-active"></label>
+      <div class="links-container">
+        <label for="sidebar-active" class="close-sidebar-button">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="32"
+            viewBox="0 -960 960 960"
+            width="32"
+          >
+            <path
+              d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
+            />
+          </svg>
+        </label>
+
+        <ul>
+          <li><a href="{{ url_for('index') }}">Home</a></li>
+          <li><a href="{{ url_for('tb_detector') }}">TB Detector</a></li>
+          <li><a href="{{ url_for('symptom') }}">Symptoms</a></li>
+          <li><a href="{{ url_for('diagnosis') }}">Diagnosis</a></li>
+          <li><a href="{{ url_for('prevention') }}">Prevention</a></li>
+          <li><a href="{{ url_for('treatment') }}">Treatment</a></li>
+          <li><a href="{{ url_for('contact') }}">Contact</a></li>
+      </div>
+    </nav>
+
+    <body>
+      <section>
+        <h2>UNDERSTAND TB RISK FACTORS</h2>
+        <ul>
+          <li class="key1">
+            <b>HIV Infection:</b> Individuals with HIV have a significantly
+            higher risk of developing TB disease because HIV weakens the immune
+            system, making it harder for the body to fend off TB bacteria.
+          </li>
+          <li class="key1">
+            <b>Recent TB Infection:</b> Those who have been recently infected
+            with TB bacteria, especially within the last two years, are more
+            likely to progress from latent TB infection to active TB disease.
+          </li>
+          <li class="key1">
+            <b>Babies and Young Children:</b> Immature immune systems in infants
+            and young children make them more susceptible to TB disease if
+            exposed to the bacteria.
+          </li>
+          <li class="key1">
+            <b>People Who Inject Illegal Drugs:</b> The act of injecting drugs
+            can damage the lungs and weaken the immune system, increasing the
+            risk of TB transmission and progression to disease.
+          </li>
+          <li class="key1">
+            <b>Weakened Immune Systems:</b> Conditions such as diabetes, certain
+            cancers (e.g., leukemia, lymphoma), organ transplants, and prolonged
+            use of corticosteroids or other immunosuppressive medications can
+            compromise the immune system, making individuals more vulnerable to
+            TB disease.
+          </li>
+          <li class="key1">
+            <b>Elderly Individuals:</b> Aging leads to a natural decline in
+            immune function, making older adults more susceptible to TB
+            infection and disease.
+          </li>
+          <li class="key1">
+            <b>Incomplete TB Treatment in the Past:</b> Individuals who were not
+            properly treated for TB in the past are at higher risk of developing
+            active TB disease. Inadequate or incomplete treatment can allow TB
+            bacteria to persist in the body, increasing the likelihood of
+            disease recurrence.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>SCREENING & TESTING</h2>
+        <ul>
+          <li class="key1">
+            <b>TB Skin Test (TST):</b> Also known as the Mantoux tuberculin skin
+            test, it involves injecting a small amount of TB protein under the
+            skin and checking for a reaction after 48 to 72 hours.
+          </li>
+          <li class="key1">
+            <b>TB Blood Test (Interferon-Gamma Release Assay - IGRA):</b> This
+            blood test detects the release of interferon-gamma by white blood
+            cells in response to TB proteins.
+          </li>
+          <li class="key1">
+            <b>Symptom-Based Screening:</b> Individuals experiencing symptoms
+            such as persistent cough (lasting more than two weeks), fever, night
+            sweats, and unexplained weight loss should seek medical attention
+            for TB testing.
+          </li>
+          <li class="key1">
+            <b>Contact Screening:</b> Close contacts of individuals with active
+            TB disease should undergo screening to detect latent TB infection.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>TREATMENT FOR LATENT TB INFECTION</h2>
+        <ul>
+          <li class="key1">
+            <b>Isoniazid (INH) Therapy:</b> This medication is commonly used to
+            treat latent TB infection. It is usually taken daily for 6 to 9
+            months.
+          </li>
+          <li class="key1">
+            <b>Rifapentine and Isoniazid (3HP):</b> A combination of rifapentine
+            and isoniazid, taken once weekly for 12 weeks, is an alternative
+            treatment option for latent TB infection.
+          </li>
+          <li class="key1">
+            <b>Directly Observed Therapy (DOT):</b> Some healthcare providers
+            may recommend directly observed therapy, where a healthcare worker
+            ensures that the individual takes their medication as prescribed.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>PREVENTIVE MEASURES FOR TRAVELERS</h2>
+        <ul>
+          <li class="key1">
+            <b>Avoiding Close Contact:</b> Travelers should avoid prolonged
+            exposure to individuals with known TB disease, especially in crowded
+            and poorly ventilated environments.
+          </li>
+          <li class="key1">
+            <b>Consultation with Experts:</b> Healthcare workers traveling to
+            areas with high TB prevalence should seek guidance from infection
+            control or occupational health experts regarding TB prevention
+            strategies.
+          </li>
+          <li class="key1">
+            <b>Pre-Travel and Post-Travel Testing:</b> Individuals anticipating
+            prolonged exposure to TB should undergo TB testing before and after
+            travel to detect any new infections.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>GENERAL PREVENTION STRATEGIES</h2>
+        <ul>
+          <li class="key1">
+            <b>Prompt Medical Attention:</b> Individuals experiencing symptoms
+            suggestive of TB should seek medical attention promptly. Early
+            diagnosis and treatment can prevent the spread of disease and
+            improve outcomes.
+          </li>
+          <li class="key1">
+            <b>Regular Testing:</b> Individuals at increased risk of TB
+            infection, such as those with HIV or close contacts of TB patients,
+            should undergo regular testing to detect latent TB infection.
+          </li>
+          <li class="key1">
+            <b>Completion of Treatment:</b> It is essential for individuals
+            prescribed treatment for latent TB infection to complete the full
+            course of medication as directed by their healthcare provider to
+            prevent disease progression.
+          </li>
+          <li class="key1">
+            <b>Respiratory Hygiene:</b> Those diagnosed with active TB disease
+            should practice good respiratory hygiene, including covering the
+            mouth and nose when coughing or sneezing, and promptly disposing of
+            tissues contaminated with respiratory secretions.
+          </li>
+          <li class="key1">
+            <b>Infection Control Measures:</b> Healthcare facilities and
+            institutions should implement infection control measures, including
+            proper ventilation, use of respirators, and isolation of TB
+            patients, to prevent transmission within healthcare settings.
+          </li>
+        </ul>
+      </section>
+    </body>
+
+    <footer>
+      <p class="f">&copy; 2024 Tuberculosis Awareness. All rights reserved.</p>
+    </footer>
+  </body>
+</html>

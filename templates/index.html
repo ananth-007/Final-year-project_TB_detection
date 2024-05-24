@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tuberculosis Awareness</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+      :root {
+        --color-1: #2a7875;
+        --text-color: #f0f0f0;
+        --accent-color: #006aff;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        font-size: 12pt;
+        font-family: Poppins, Segoe UI, Tahoma, sans-serif;
+      }
+
+      /* Header Styles */
+      nav {
+        height: 70px;
+        background-color: var(--color-1);
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+      }
+      nav img {
+        width: 50px;
+        position: absolute;
+        border-radius: 10px;
+        top: 10px;
+        left: 5%;
+      }
+      nav ul {
+        /* float: right; */
+        margin-right: 20px;
+        text-decoration: none;
+      }
+      nav ul li {
+        display: inline-flex;
+        line-height: 80px;
+        margin: 0 15px;
+        text-decoration: none;
+      }
+      nav ul li a {
+        position: relative;
+        color: rgb(240, 255, 240);
+        font-size: 18px;
+        padding: 5px 0;
+        text-decoration: none;
+      }
+      nav ul li a::before {
+        position: absolute;
+        content: "";
+        left: 0;
+        bottom: 25px;
+        height: 3px;
+        width: 100%;
+        background: rgb(202, 227, 239);
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.4s linear;
+      }
+      nav ul li a:hover:before {
+        transform: scaleX(1);
+        transform-origin: left;
+      }
+
+      nav svg {
+        fill: var(--text-color);
+      }
+      #sidebar-active {
+        display: none;
+      }
+      .open-sidebar-button,
+      .close-sidebar-button {
+        display: none;
+      }
+      .key {
+        list-style: disc;
+      }
+      .key1 {
+        list-style: disc;
+        margin-left: 2em;
+      }
+      /* section {
+        margin: 2rem;
+        padding: auto;
+      } */
+      section {
+        background-color: #fff;
+        padding: 2rem;
+        margin: 1rem;
+        border-radius: 15px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+      section ul li {
+        text-decoration: none;
+        list-style: none;
+        line-height: normal;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+      th,
+      td {
+        padding: 10px;
+        text-align: left;
+        border: 1px solid #ddd;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+
+      /* media queries */
+      @media (max-width: 1200px) {
+        nav img {
+          left: 7%;
+        }
+      }
+      @media (max-width: 1110px) {
+        nav img {
+          left: 6%;
+          top: 9px;
+          width: 55px;
+        }
+        nav ul li a {
+          font-size: 17px;
+        }
+      }
+      @media (max-width: 1030px) {
+        nav ul li a::before {
+          position: absolute;
+          content: "";
+          left: 0;
+          bottom: -5px;
+          height: 3px;
+          width: 100%;
+          background: rgb(202, 227, 239);
+          transform: scaleX(0);
+          transform-origin: right;
+          transition: transform 0.4s linear;
+        }
+        .links-container {
+          flex-direction: column;
+          align-items: end;
+
+          position: fixed;
+          top: 0px;
+          height: 100%;
+          right: -100%;
+          width: 270px;
+          display: block;
+          text-align: end;
+          background-color: var(--color-1);
+          box-shadow: -5px 0 5px rgba(0, 0, 0, 0.25);
+          transition: all 0.5s;
+        }
+        nav a {
+          box-sizing: border-box;
+          position: relative;
+          padding: 5px 0px;
+          height: auto;
+          width: 100%;
+          justify-content: flex-end;
+        }
+        nav ul {
+          padding: 0;
+          flex-direction: column;
+          line-height: 40px;
+        }
+        nav ul li {
+          text-align: center;
+          display: block;
+          font-size: 35px;
+          padding: 1rem;
+          line-height: 40px;
+          text-transform: uppercase;
+        }
+
+        .open-sidebar-button {
+          padding: 20px;
+          display: block;
+        }
+
+        .close-sidebar-button {
+          padding: 20px;
+          display: block;
+        }
+        #sidebar-active:checked ~ .links-container {
+          right: 0;
+        }
+        #sidebar-active:checked ~ #overlay {
+          height: 100%;
+          width: 100%;
+          position: fixed;
+          top: 0;
+          left: 0;
+        }
+      }
+
+      /* footer style */
+      footer {
+        background-color: #333;
+        color: white;
+        text-align: center;
+        padding: 20px;
+      }
+      .f {
+        color: #f9f5f5;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <img
+        class="logo"
+        src="{{ url_for('static', filename='logo.jfif') }}"
+        alt="Logo"
+      />
+      <input type="checkbox" id="sidebar-active" />
+      <label for="sidebar-active" class="open-sidebar-button">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          height="32"
+          viewBox="0 -960 960 960"
+          width="32"
+        >
+          <path
+            d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"
+          />
+        </svg>
+      </label>
+      <label id="overlay" for="sidebar-active"></label>
+      <div class="links-container">
+        <label for="sidebar-active" class="close-sidebar-button">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="32"
+            viewBox="0 -960 960 960"
+            width="32"
+          >
+            <path
+              d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
+            />
+          </svg>
+        </label>
+
+        <ul>
+          <li><a href="{{ url_for('index') }}">Home</a></li>
+          <li><a href="{{ url_for('tb_detector') }}">TB Detector</a></li>
+          <li><a href="{{ url_for('symptom') }}">Symptoms</a></li>
+          <li><a href="{{ url_for('diagnosis') }}">Diagnosis</a></li>
+          <li><a href="{{ url_for('prevention') }}">Prevention</a></li>
+          <li><a href="{{ url_for('treatment') }}">Treatment</a></li>
+          <li><a href="{{ url_for('contact') }}">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+    <body>
+      <section>
+        <h2>KEY FACTS</h2>
+        <ul>
+          <li class="key">
+            A total of 1.3 million people died from TB in 2022 (including 167
+            000 people with HIV). Worldwide, TB is the second leading infectious
+            killer after COVID-19 (above HIV and AIDS).
+          </li>
+          <li class="key">
+            In 2022, an estimated 10.6 million people fell ill with tuberculosis
+            (TB) worldwide, including 5.8 million men, 3.5 million women and 1.3
+            million children. TB is present in all countries and age groups. TB
+            is curable and preventable.
+          </li>
+          <li class="key">
+            Multidrug-resistant TB (MDR-TB) remains a public health crisis and a
+            health security threat. Only about 2 in 5 people with drug resistant
+            TB accessed treatment in 2022.
+          </li>
+          <li class="key">
+            Global efforts to combat TB have saved an estimated 75 million lives
+            since the year 2000.
+          </li>
+          <li class="key">
+            US$ 13 billion is needed annually for TB prevention, diagnosis,
+            treatment and care to achieve the global target agreed at the 2018
+            UN high level-meeting on TB.Ending the TB epidemic by 2030 is among
+            the health targets of the United Nations Sustainable Development
+            Goals (SDGs).
+          </li>
+          <li class="key">
+            Ending the TB epidemic by 2030 is among the health targets of the
+            United Nations Sustainable Development Goals (SDGs).
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>TUBERCULOSIS</h2>
+        <ul>
+          <li>
+            Tuberculosis (TB) is an infectious disease that most often affects
+            the lungs and is caused by a type of bacteria. It spreads through
+            the air when infected people cough, sneeze or spit.
+          </li>
+          <li>Tuberculosis is preventable and curable.</li>
+          <li>
+            About a quarter of the global population is estimated to have been
+            infected with TB bacteria. About 5–10% of people infected with TB
+            will eventually get symptoms and develop TB disease.
+          </li>
+          <li>
+            Those who are infected but not (yet) ill with the disease cannot
+            transmit it. TB disease is usually treated with antibiotics and can
+            be fatal without treatment.
+          </li>
+          <li>
+            In certain countries, the Bacille Calmette-Guérin (BCG) vaccine is
+            given to babies or small children to prevent TB. The vaccine
+            prevents TB outside of the lungs but not in the lungs.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>HOW TB SPREADS</h2>
+        <ul>
+          <li>
+            TB bacteria spread through the air from one person to another. When
+            a person with TB disease of the lungs or throat coughs, speaks, or
+            sings, TB bacteria can get into the air. People nearby may breathe
+            in these bacteria and become infected.
+          </li>
+          <p>TB is NOT spread by</p>
+          <li class="key1">shaking someone’s hand</li>
+          <li class="key1">sharing food or drink</li>
+          <li class="key1">touching bed linens or toilet seats</li>
+          <li class="key1">sharing toothbrushes</li>
+          <li class="key1">kissing</li>
+          <li>
+            When a person breathes in TB bacteria, the bacteria can settle in
+            the lungs and begin to grow. From there, they can move through the
+            blood to other parts of the body, such as the kidney, spine, and
+            brain.
+          </li>
+          <li>
+            TB disease in the lungs or throat can be infectious. This means that
+            the bacteria can spread to other people. TB in other parts of the
+            body, such as the kidney or spine, is usually not infectious.
+          </li>
+          <li>
+            People with TB disease are most likely to spread it to people they
+            spend time with every day. This includes family members, friends,
+            and coworkers or schoolmates.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>LATENT TB INFECTION AND TB DISEASE</h2>
+        <ul>
+          <li>
+            Not everyone infected with TB bacteria becomes sick. As a result,
+            two TB-related conditions exist: latent TB infection and TB disease.
+          </li>
+          <br />
+          <h4>Latent TB Infection</h4>
+          <li>
+            TB bacteria can live in the body without making you sick. This is
+            called latent TB infection. In most people who breathe in TB
+            bacteria and become infected, the body is able to fight the bacteria
+            to stop them from growing. People with latent TB infection:
+          </li>
+          <li class="key1">Have no symptoms</li>
+          <li class="key1">Don’t feel sick</li>
+          <li class="key1">Can’t spread TB bacteria to others</li>
+          <li class="key1">
+            Usually have a positive TB skin test reaction or positive TB blood
+            test
+          </li>
+          <li class="key1">
+            May develop TB disease if they do not receive treatment for latent
+            TB infection
+          </li>
+          <li>
+            Many people who have latent TB infection never develop TB disease.
+            In these people, the TB bacteria remain inactive for a lifetime
+            without causing disease. But in other people, especially people who
+            have a weak immune system, the bacteria become active, multiply, and
+            cause TB disease.
+          </li>
+          <br />
+          <h4>TB Disease (Active TB)</h4>
+          <li>
+            TB bacteria become active if the immune system can’t stop them from
+            growing. When TB bacteria are active (multiplying in your body),
+            this is called TB disease. People with TB disease are sick. They may
+            also be able to spread the bacteria to people they spend time with
+            every day.
+          </li>
+          <li>
+            Many people who have latent TB infection never develop TB disease.
+            Some people develop TB disease soon after becoming infected (within
+            weeks) before their immune system can fight the TB bacteria. Other
+            people may get sick years later when their immune system becomes
+            weak for another reason.
+          </li>
+          <li>
+            For people whose immune systems are weak, especially those with HIV
+            infection, the risk of developing TB disease is much higher than for
+            people with normal immune systems.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>
+          The Difference between Latent TB Infection (LTBI) and TB Disease
+        </h2>
+        <br />
+        <table>
+          <tr>
+            <th>Feature</th>
+            <th>Latent TB Infection</th>
+            <th>TB Disease</th>
+          </tr>
+          <tr>
+            <td>Symptoms</td>
+            <td>No symptoms</td>
+            <td>
+              Cough (3+ weeks), chest pain, coughing up blood, weakness,
+              fatigue, weight loss, no appetite, chills, fever, night sweats
+            </td>
+          </tr>
+          <tr>
+            <td>Feels sick</td>
+            <td>No</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>Spreads TB bacteria</td>
+            <td>No</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>Skin test or blood test result</td>
+            <td>Usually positive</td>
+            <td>Usually positive</td>
+          </tr>
+          <tr>
+            <td>Chest x-ray</td>
+            <td>Normal</td>
+            <td>May be abnormal</td>
+          </tr>
+          <tr>
+            <td>Sputum smear</td>
+            <td>Negative</td>
+            <td>May be positive</td>
+          </tr>
+          <tr>
+            <td>Treatment</td>
+            <td>
+              Needs treatment for latent TB infection to prevent TB disease
+            </td>
+            <td>Needs treatment to treat TB disease</td>
+          </tr>
+        </table>
+      </section>
+    </body>
+    <footer>
+      <p class="f">&copy; 2024 Tuberculosis Awareness. All rights reserved.</p>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Symptoms</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+      :root {
+        --color-1: #2a7875;
+        --text-color: #f0f0f0;
+        --accent-color: #006aff;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        font-size: 12pt;
+        font-family: Poppins, Segoe UI, Tahoma, sans-serif;
+      }
+
+      /* Header Styles */
+      nav {
+        height: 70px;
+        background-color: var(--color-1);
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+      }
+      nav img {
+        width: 50px;
+        position: absolute;
+        border-radius: 10px;
+        top: 10px;
+        left: 5%;
+      }
+      nav ul {
+        /* float: right; */
+        margin-right: 20px;
+        text-decoration: none;
+      }
+      nav ul li {
+        display: inline-flex;
+        line-height: 80px;
+        margin: 0 15px;
+        text-decoration: none;
+      }
+      nav ul li a {
+        position: relative;
+        color: rgb(240, 255, 240);
+        font-size: 18px;
+        padding: 5px 0;
+        text-decoration: none;
+      }
+      nav ul li a::before {
+        position: absolute;
+        content: "";
+        left: 0;
+        bottom: 25px;
+        height: 3px;
+        width: 100%;
+        background: rgb(202, 227, 239);
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.4s linear;
+      }
+      nav ul li a:hover:before {
+        transform: scaleX(1);
+        transform-origin: left;
+      }
+
+      nav svg {
+        fill: var(--text-color);
+      }
+      #sidebar-active {
+        display: none;
+      }
+      .open-sidebar-button,
+      .close-sidebar-button {
+        display: none;
+      }
+
+      /* media queries */
+      @media (max-width: 1200px) {
+        nav img {
+          left: 7%;
+        }
+      }
+      @media (max-width: 1110px) {
+        nav img {
+          left: 6%;
+          top: 9px;
+          width: 55px;
+        }
+        nav ul li a {
+          font-size: 17px;
+        }
+      }
+      @media (max-width: 1030px) {
+        nav ul li a::before {
+          position: absolute;
+          content: "";
+          left: 0;
+          bottom: -5px;
+          height: 3px;
+          width: 100%;
+          background: rgb(202, 227, 239);
+          transform: scaleX(0);
+          transform-origin: right;
+          transition: transform 0.4s linear;
+        }
+        .links-container {
+          flex-direction: column;
+          align-items: end;
+
+          position: fixed;
+          top: 0px;
+          height: 100%;
+          right: -100%;
+          width: 270px;
+          display: block;
+          text-align: end;
+          background-color: var(--color-1);
+          box-shadow: -5px 0 5px rgba(0, 0, 0, 0.25);
+          transition: all 0.5s;
+        }
+        nav a {
+          box-sizing: border-box;
+          position: relative;
+          padding: 5px 0px;
+          height: auto;
+          width: 100%;
+          justify-content: flex-end;
+        }
+        nav ul {
+          padding: 0;
+          flex-direction: column;
+          line-height: 40px;
+        }
+        nav ul li {
+          text-align: center;
+          display: block;
+          font-size: 35px;
+          padding: 1rem;
+          line-height: 40px;
+          text-transform: uppercase;
+        }
+
+        .open-sidebar-button {
+          padding: 20px;
+          display: block;
+        }
+
+        .close-sidebar-button {
+          padding: 20px;
+          display: block;
+        }
+        #sidebar-active:checked ~ .links-container {
+          right: 0;
+        }
+        #sidebar-active:checked ~ #overlay {
+          height: 100%;
+          width: 100%;
+          position: fixed;
+          top: 0;
+          left: 0;
+        }
+      }
+
+      section {
+        background-color: #fff;
+        padding: 2rem;
+        margin: 1rem;
+        border-radius: 15px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+      section ul li {
+        text-decoration: none;
+        list-style: none;
+        line-height: normal;
+      }
+      .key {
+        list-style: disc;
+      }
+      .key1 {
+        list-style: disc;
+        margin-left: 2em;
+      }
+      b {
+        color: #343333;
+      }
+
+      /* footer style */
+      footer {
+        background-color: #333;
+        color: white;
+        text-align: center;
+        padding: 20px;
+      }
+      .f {
+        color: #f9f5f5;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <img
+        class="logo"
+        src="{{ url_for('static', filename='logo.jfif') }}"
+        alt="Logo"
+      />
+      <input type="checkbox" id="sidebar-active" />
+      <label for="sidebar-active" class="open-sidebar-button">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          height="32"
+          viewBox="0 -960 960 960"
+          width="32"
+        >
+          <path
+            d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"
+          />
+        </svg>
+      </label>
+      <label id="overlay" for="sidebar-active"></label>
+      <div class="links-container">
+        <label for="sidebar-active" class="close-sidebar-button">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="32"
+            viewBox="0 -960 960 960"
+            width="32"
+          >
+            <path
+              d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
+            />
+          </svg>
+        </label>
+
+        <ul>
+          <li><a href="{{ url_for('index') }}">Home</a></li>
+          <li><a href="{{ url_for('tb_detector') }}">TB Detector</a></li>
+          <li><a href="{{ url_for('symptom') }}">Symptoms</a></li>
+          <li><a href="{{ url_for('diagnosis') }}">Diagnosis</a></li>
+          <li><a href="{{ url_for('prevention') }}">Prevention</a></li>
+          <li><a href="{{ url_for('treatment') }}">Treatment</a></li>
+          <li><a href="{{ url_for('contact') }}">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+    <body>
+      <section>
+        <h2>PULMONARY TB SYMPTOMS</h2>
+        <ul>
+          <li class="key1">
+            <b>Persistent Cough:</b> The cough in pulmonary TB is often
+            productive, meaning it produces sputum. The sputum can vary in color
+            from white to yellow to green and may sometimes contain blood.
+          </li>
+          <li class="key1">
+            <b>Chest Pain:</b> Chest pain in TB can be sharp or dull and may
+            worsen with deep breathing, coughing, or physical activity.
+          </li>
+          <li class="key1">
+            <b>Coughing Up Blood:</b> Hemoptysis can range from small amounts of
+            blood streaked in sputum to larger amounts of bright red blood. It
+            indicates damage to the lungs' blood vessels due to TB infection.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>GENERAL SYMPTOMS OF TB DISEASE</h2>
+        <ul>
+          <li class="key1">
+            <b>Weakness or Fatigue:</b> Fatigue in TB can be profound and
+            persistent, often affecting daily activities and quality of life.
+          </li>
+          <li class="key1">
+            <b>Weight Loss:</b> Significant weight loss, especially in a short
+            period, is common in TB due to the body's increased metabolic rate
+            and decreased appetite.
+          </li>
+          <li class="key1">
+            <b>Loss of Appetite:</b> Anorexia in TB is often multifactorial,
+            including factors such as cytokine release, altered taste sensation,
+            and psychological effects.
+          </li>
+          <li class="key1">
+            <b>Chills:</b> Chills usually accompany fever episodes and are the
+            body's response to an acute infection.
+          </li>
+          <li class="key1">
+            <b>Fever:</b> Fever in TB can be low-grade or high-grade and is
+            often intermittent, with spikes occurring in the late afternoon or
+            evening.
+          </li>
+          <li class="key1">
+            <b>Night Sweats:</b> Night sweats can be severe, soaking through
+            clothes and bedding. They result from the body's attempt to regulate
+            temperature during fever episodes.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>FACTORS INCREASING TB RISK</h2>
+        <ul>
+          <li class="key1">
+            <b>Diabetes:</b> Diabetes mellitus increases the risk of TB by
+            impairing immune function and creating a favorable environment for
+            bacterial growth.
+          </li>
+          <li class="key1">
+            <b>Weakened Immune System:</b> Conditions such as HIV/AIDS, cancer,
+            organ transplantation, and immunosuppressive therapy increase
+            susceptibility to TB by compromising the body's ability to contain
+            the infection.
+          </li>
+          <li class="key1">
+            <b>Malnutrition:</b> Malnutrition, particularly deficiencies in
+            protein and micronutrients, weakens the immune system and impairs
+            the body's ability to mount an effective immune response against TB
+            bacteria.
+          </li>
+          <li class="key1">
+            <b>Tobacco Use:</b> Smoking damages the respiratory tract, reduces
+            ciliary function, and impairs lung immunity, making smokers more
+            susceptible to TB infection and progression to disease.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>LATENT TB INFECTION</h2>
+        <ul>
+          <li>
+            People with latent TB infection have TB bacteria in their bodies but
+            do not feel sick and cannot spread TB to others. However, they are
+            at risk of developing active TB disease, especially if their immune
+            system becomes compromised. Latent TB infection is diagnosed through
+            tuberculin skin tests or interferon-gamma release assays and can be
+            treated with preventive therapy to reduce the risk of progression to
+            active disease.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>OTHER SYMPTOMS</h2>
+        <ul>
+          <li class="key1">
+            <b>Respiratory System:</b> TB can cause pleuritic chest pain, which
+            worsens with deep breathing or coughing due to inflammation of the
+            pleura. It can also lead to dyspnea (shortness of breath) and
+            wheezing in advanced stages.
+          </li>
+          <li class="key1">
+            <b>Systemic Symptoms:</b> TB can present with generalized symptoms
+            such as fatigue, fever, and weight loss, as well as specific
+            symptoms related to the affected organs, such as abdominal pain in
+            abdominal TB or joint pain in skeletal TB.
+          </li>
+          <li class="key1">
+            <b>Neurological Symptoms:</b> TB meningitis, a severe form of TB
+            affecting the brain's membranes, presents with symptoms such as
+            headache, neck stiffness, altered mental status, seizures, and focal
+            neurological deficits.
+          </li>
+          <li class="key1">
+            <b>Skin Symptoms:</b> Cutaneous TB can manifest as nodules, ulcers,
+            abscesses, or papules on the skin, often with a characteristic
+            violaceous hue. It can also present as lupus vulgaris, a chronic,
+            progressive form of TB involving the skin and underlying tissues.
+          </li>
+        </ul>
+      </section>
+    </body>
+
+    <footer>
+      <p class="f">&copy; 2024 Tuberculosis Awareness. All rights reserved.</p>
+    </footer>
+  </body>
+</html>

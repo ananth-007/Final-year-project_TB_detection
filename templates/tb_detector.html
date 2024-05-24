@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tuberculosis Awareness_TB_Detector</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+      :root {
+        --color-1: #2a7875;
+        --text-color: #f0f0f0;
+        --accent-color: #006aff;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        font-size: 12pt;
+        font-family: Poppins, Segoe UI, Tahoma, sans-serif;
+      }
+
+      /* Header Styles */
+      nav {
+        height: 70px;
+        background-color: var(--color-1);
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+      }
+      nav img {
+        width: 50px;
+        position: absolute;
+        border-radius: 10px;
+        top: 10px;
+        left: 5%;
+      }
+      nav ul {
+        /* float: right; */
+        margin-right: 20px;
+        text-decoration: none;
+      }
+      nav ul li {
+        display: inline-flex;
+        line-height: 80px;
+        margin: 0 15px;
+        text-decoration: none;
+      }
+      nav ul li a {
+        position: relative;
+        color: rgb(240, 255, 240);
+        font-size: 18px;
+        padding: 5px 0;
+        text-decoration: none;
+      }
+      nav ul li a::before {
+        position: absolute;
+        content: "";
+        left: 0;
+        bottom: 25px;
+        height: 3px;
+        width: 100%;
+        background: rgb(202, 227, 239);
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.4s linear;
+      }
+      nav ul li a:hover:before {
+        transform: scaleX(1);
+        transform-origin: left;
+      }
+
+      nav svg {
+        fill: var(--text-color);
+      }
+      #sidebar-active {
+        display: none;
+      }
+      .open-sidebar-button,
+      .close-sidebar-button {
+        display: none;
+      }
+
+      /* media queries */
+      @media (max-width: 1200px) {
+        nav img {
+          left: 7%;
+        }
+      }
+      @media (max-width: 1110px) {
+        nav img {
+          left: 6%;
+          top: 9px;
+          width: 55px;
+        }
+        nav ul li a {
+          font-size: 17px;
+        }
+      }
+
+      @media (max-width: 1030px) {
+        nav ul li a::before {
+          position: absolute;
+          content: "";
+          left: 0;
+          bottom: -5px;
+          height: 3px;
+          width: 100%;
+          background: rgb(202, 227, 239);
+          transform: scaleX(0);
+          transform-origin: right;
+          transition: transform 0.4s linear;
+        }
+        .links-container {
+          flex-direction: column;
+          align-items: end;
+
+          position: fixed;
+          top: 0px;
+          height: 100%;
+          right: -100%;
+          width: 270px;
+          display: block;
+          text-align: end;
+          background-color: var(--color-1);
+          box-shadow: -5px 0 5px rgba(0, 0, 0, 0.25);
+          transition: all 0.5s;
+        }
+        nav a {
+          box-sizing: border-box;
+          position: relative;
+          padding: 5px 0px;
+          height: auto;
+          width: 100%;
+          justify-content: flex-end;
+        }
+        nav ul {
+          padding: 0;
+          flex-direction: column;
+          line-height: 40px;
+        }
+        nav ul li {
+          text-align: center;
+          display: block;
+          font-size: 35px;
+          padding: 1rem;
+          line-height: 40px;
+          text-transform: uppercase;
+        }
+
+        .open-sidebar-button {
+          padding: 20px;
+          display: block;
+        }
+
+        .close-sidebar-button {
+          padding: 20px;
+          display: block;
+        }
+        #sidebar-active:checked ~ .links-container {
+          right: 0;
+        }
+        #sidebar-active:checked ~ #overlay {
+          height: 100%;
+          width: 100%;
+          position: fixed;
+          top: 0;
+          left: 0;
+        }
+      }
+
+      /* body */
+      .container {
+        width: 80%;
+        max-width: 1000px; /* Adjusted max-width for better readability */
+        margin: 50px auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+        border-radius: 10px;
+      }
+
+      h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px; /* Added margin for separation */
+      }
+
+      .form-container {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .file-upload-container {
+        margin-bottom: 10px; /* Added margin for separation */
+      }
+
+      .file-upload-container label {
+        display: block;
+        margin-bottom: 15px; /* Added margin for separation */
+      }
+
+      input[type="file"] {
+        display: none;
+      }
+
+      button {
+        padding: 10px 20px;
+        background-color: #4caf50;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #4da250;
+      }
+
+      .image-container {
+        text-align: center;
+        margin: 1rem 1rem 1rem 1rem;
+        padding: auto;
+
+        /* Added margin for separation */
+        height: 500px; /* Added fixed height to maintain container size */
+        overflow: hidden; /* Added overflow property */
+        /* border: 5px solid black; */
+        border-radius: 10px;
+      }
+
+      #uploaded-image {
+        max-width: 150%;
+        max-height: 90%; /* Adjusted max-height to fill container */
+        display: none; /* Initially hidden */
+        border-radius: 10px;
+        margin: auto;
+      }
+
+      .result-container {
+        text-align: center;
+        margin-bottom: 20px; /* Added margin for separation */
+      }
+
+      #refresh-button {
+        display: none;
+        margin: 20px auto;
+        padding: 10px 20px;
+        background-color: #4caf50;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .loading-spinner {
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        border-top: 4px solid #3498db;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* footer style */
+      footer {
+        background-color: #333;
+        color: white;
+        text-align: center;
+        padding: 20px;
+      }
+      .f {
+        color: #f9f5f5;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <img
+        class="logo"
+        src="{{ url_for('static', filename='logo.jfif') }}"
+        alt="Logo"
+      />
+      <input type="checkbox" id="sidebar-active" />
+      <label for="sidebar-active" class="open-sidebar-button">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          height="32"
+          viewBox="0 -960 960 960"
+          width="32"
+        >
+          <path
+            d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"
+          />
+        </svg>
+      </label>
+      <label id="overlay" for="sidebar-active"></label>
+      <div class="links-container">
+        <label for="sidebar-active" class="close-sidebar-button">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="32"
+            viewBox="0 -960 960 960"
+            width="32"
+          >
+            <path
+              d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
+            />
+          </svg>
+        </label>
+
+        <ul>
+          <li><a href="{{ url_for('index') }}">Home</a></li>
+          <li><a href="{{ url_for('tb_detector') }}">TB Detector</a></li>
+          <li><a href="{{ url_for('symptom') }}">Symptoms</a></li>
+          <li><a href="{{ url_for('diagnosis') }}">Diagnosis</a></li>
+          <li><a href="{{ url_for('prevention') }}">Prevention</a></li>
+          <li><a href="{{ url_for('treatment') }}">Treatment</a></li>
+          <li><a href="{{ url_for('contact') }}">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container">
+      <h2>Upload a chest X-Ray image for TB test</h2>
+
+      <div class="form-container">
+        <form
+          action="/predict"
+          method="post"
+          enctype="multipart/form-data"
+          id="upload-form"
+        >
+          <div class="file-upload-container">
+            <label for="file-input">Choose a file</label>
+            <input
+              type="file"
+              name="file"
+              accept=".png, .jpg, .jpeg"
+              id="file-input"
+            />
+            <p id="image-name-placeholder" style="margin-top: 5px"></p>
+          </div>
+          <button type="button" id="predict-button" onclick="predictImage()">
+            Predict
+          </button>
+        </form>
+      </div>
+
+      <div class="image-container">
+        <img id="uploaded-image" src="#" alt="Uploaded Image" />
+      </div>
+
+      <div id="result" class="result-container">
+        <!-- Prediction result and loading spinner will be displayed here -->
+      </div>
+
+      <div class="button-container">
+        <button id="refresh-button" style="display: none">Start Over</button>
+      </div>
+    </div>
+
+    <footer>
+      <p class="f">&copy; 2024 Tuberculosis Awareness. All rights reserved.</p>
+    </footer>
+
+    <script>
+      // function predictImage() {
+      //   const imageElement = document.getElementById("uploaded-image");
+      //   const fileInput = document.getElementById("file-input");
+      //   const imageNamePlaceholder = document.getElementById("image-name");
+
+      //   document
+      //     .getElementById("file-input")
+      //     .addEventListener("change", function (event) {
+      //       // Get the selected file
+      //       const selectedFile = event.target.files[0];
+
+      //       // Get the placeholder element
+      //       const imageNamePlaceholder = document.getElementById(
+      //         "image-name-placeholder"
+      //       );
+
+      //       // Update the placeholder with the selected image name or display a message if no file is selected
+      //       if (selectedFile) {
+      //         imageNamePlaceholder.textContent = selectedFile.name;
+      //       } else {
+      //         imageNamePlaceholder.textContent = "No image selected";
+      //       }
+      //     });
+
+      //   const file = fileInput.files[0];
+      //   const reader = new FileReader();
+
+      //   reader.onloadend = function () {
+      //     imageElement.src = reader.result;
+      //     imageElement.style.display = "block";
+      //     imageElement.style.border = "5px solid black";
+
+      //     const resultDiv = document.getElementById("result");
+      //     resultDiv.innerHTML = `<div class="loading-spinner"></div><p>Predicting...</p>`;
+
+      //     // Display the image name
+      //     imageNamePlaceholder.textContent = file.name;
+
+      //     const formData = new FormData();
+      //     formData.append("file", file);
+
+      //     document
+      //       .getElementById("refresh-button")
+      //       .addEventListener("click", function () {
+      //         location.reload();
+      //       });
+
+      //     fetch("http://localhost:5000/predict", {
+      //       method: "POST",
+      //       body: formData,
+      //     })
+      //       .then((response) => response.json())
+      //       .then((data) => {
+      //         resultDiv.innerHTML = ""; // Clear loading spinner and text
+      //         if (data.error) {
+      //           resultDiv.innerHTML = `<p>Error: ${data.error}</p>`;
+      //         } else {
+      //           resultDiv.innerHTML = `<p>Prediction: ${data.result}</p>`;
+      //           if (data.result === "Not Tuberculosis") {
+      //             imageElement.style.border = "7px solid green";
+      //           } else if (data.result === "Tuberculosis") {
+      //             imageElement.style.border = "7px solid red";
+      //           }
+      //           document.getElementById("refresh-button").style.display =
+      //             "block";
+      //         }
+      //       })
+      //       .catch((error) => {
+      //         console.error("Error predicting image:", error);
+      //       });
+      //   };
+
+      //   if (file) {
+      //     reader.readAsDataURL(file);
+      //   }
+      // }
+
+      // const cusMenu = document.querySelector(".nav-toggle");
+      // const nav = document.querySelector(".nav");
+
+      // cusMenu.addEventListener("click", () => {
+      //   nav.classList.toggle("openMenu");
+      // });
+
+      function predictImage() {
+        const imageElement = document.getElementById("uploaded-image");
+        const file = document.querySelector("input[type=file]").files[0];
+        const reader = new FileReader();
+
+        reader.onloadend = function () {
+          imageElement.src = reader.result;
+          imageElement.style.display = "block";
+          imageElement.style.border = "5px solid black";
+
+          const resultDiv = document.getElementById("result");
+          resultDiv.innerHTML = `<div class="loading-spinner"></div><p>Predicting...</p>`;
+
+          const formData = new FormData();
+          formData.append("file", file);
+
+          document
+            .getElementById("refresh-button")
+            .addEventListener("click", function () {
+              location.reload();
+            });
+
+          fetch("http://localhost:5000/predict", {
+            method: "POST",
+            body: formData,
+          })
+            .then((response) => response.json())
+
+            .then((data) => {
+              resultDiv.innerHTML = ""; // Clear loading spinner and text
+              if (data.error) {
+                resultDiv.innerHTML = `<p>Error: ${data.error}</p>`;
+              } else {
+                resultDiv.innerHTML = `<p>Prediction: ${data.result}</p>`;
+
+                if (data.result === "Normal") {
+                  imageElement.style.border = "7px solid green";
+                  //   console.log(data.result);
+                } else if (
+                  data.result === "Abnormal - Suggestive Tuberculosis"
+                ) {
+                  imageElement.style.border = "7px solid red";
+                  //   console.log(data.result);
+                }
+                document.getElementById("refresh-button").style.display =
+                  "block";
+              }
+            })
+            .catch((error) => {
+              console.error("Error predicting image:", error);
+            });
+        };
+
+        if (file) {
+          reader.readAsDataURL(file);
+        }
+      }
+      const cusMenu = document.querySelector(".nav-toggle");
+      const nav = document.querySelector(".nav");
+
+      cusMenu.addEventListener("click", () => {
+        nav.classList.toggle("openMenu");
+      });
+    </script>
+  </body>
+</html>
